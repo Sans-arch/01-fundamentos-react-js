@@ -8,7 +8,8 @@ import { Avatar } from "./Avatar";
 import { useState } from "react";
 
 export function Post({ author, content, publishedAt }) {
-  const [comments, setComments] = useState([1, 2]);
+  const [comments, setComments] = useState(["Post muito bacana, hein?!"]);
+  const [newCommentText, setNewCommentText] = useState("");
 
   const publishedDateFormatted = format(
     publishedAt,
@@ -23,8 +24,12 @@ export function Post({ author, content, publishedAt }) {
 
   function handleCreateNewComment(event) {
     event.preventDefault();
+    setComments([...comments, newCommentText]);
+    setNewCommentText("");
+  }
 
-    setComments([...comments, comments.length + 1]);
+  function handleNewCommentChange() {
+    setNewCommentText(event.target.value);
   }
 
   return (
@@ -62,7 +67,13 @@ export function Post({ author, content, publishedAt }) {
       <form onSubmit={handleCreateNewComment} className={styles.commentForm}>
         <strong>Deixe seu feedback</strong>
 
-        <textarea placeholder="Deixe um comentário" />
+        <textarea
+          name="comment"
+          spellCheck={false}
+          value={newCommentText}
+          placeholder="Deixe um comentário"
+          onChange={handleNewCommentChange}
+        />
 
         <footer>
           <button type="submit">Publicar</button>
@@ -71,7 +82,7 @@ export function Post({ author, content, publishedAt }) {
 
       <div className={styles.commentList}>
         {comments.map((comment) => (
-          <Comment />
+          <Comment content={comment} />
         ))}
       </div>
     </article>
